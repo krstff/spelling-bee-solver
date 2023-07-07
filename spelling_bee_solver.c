@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 
 
 char*read_line(FILE *file){
@@ -15,7 +16,7 @@ char*read_line(FILE *file){
 			char *temp = realloc(buffer, size + 2);
 			if(!temp){
 				free(buffer);
-				return "dopici";
+				return NULL;
 			}
 			buffer = temp;
 		}
@@ -24,21 +25,21 @@ char*read_line(FILE *file){
 	buffer[size] = '\0';
 	return buffer;
 }
-char contains(char *haystack, char needle){
+bool contains(char *haystack, char needle){
 	for(int i = 0; i < 7; i++){
 		if(haystack[i] == needle){
-			return 1;
+			return true;
 		}
 	}
-	return 0;
+	return false;
 }
 char consists_only_of(char letters[7], char *word){
 	for(int i = 0; i < strlen(word); i++){
 		if(!contains(letters, word[i])){
-			return 0;
+			return false;
 		}
 	}
-	return 1;
+	return true;
 }
 void solve(char main, char letters[6]){
 	FILE *all_words = fopen("all_longer_words.txt", "r");
@@ -57,8 +58,8 @@ void solve(char main, char letters[6]){
 
 	while(!feof(all_words)){
 		line = read_line(all_words);
-		if(strlen(line) == 0){
-			continue;
+		if(line == NULL){
+			break;
 		}
 		if(!consists_only_of(all_letters, line)){
 			free(line);
